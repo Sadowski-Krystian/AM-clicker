@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Asteroid Clicker</string>
+    <string name="menu_play">Graj</string>
+    <string name="menu_profile">Profil</string>
+    <string name="menu_achievements">Osiągnięcia</string>
+    <string name="menu_credits">Kredyty</string>
+    <string name="menu_subtitle">Klikaj asteroidy i zbieraj zasoby!</string>
+</resources>

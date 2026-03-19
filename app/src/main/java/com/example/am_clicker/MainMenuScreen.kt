@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 
 val BackgroundDark = Color(0xFF1A1A2E)
 val BackgroundPurple = Color(0xFF301934)
@@ -58,16 +59,16 @@ fun MainMenuScreen(
             Text("Clicker", color = Color(0xFFD8B4E2), fontSize = 20.sp, fontWeight = FontWeight.Medium)
             Spacer(modifier = Modifier.height(48.dp))
 
-            GradientButton("Graj", Icons.Default.PlayArrow, GradientPlay) { viewModel.onPlayClicked() }
+            GradientButton(stringResource(id = R.string.menu_play), Icons.Default.PlayArrow, GradientPlay) { viewModel.onPlayClicked() }
             Spacer(modifier = Modifier.height(16.dp))
-            GradientButton("Profil", Icons.Default.Person, GradientProfile) { viewModel.onProfileClicked() }
+            GradientButton(stringResource(id = R.string.menu_profile), Icons.Default.Person, GradientProfile) { viewModel.onProfileClicked() }
             Spacer(modifier = Modifier.height(16.dp))
-            GradientButton("Osiągnięcia", Icons.Default.Star, GradientAchievements) { viewModel.onAchievementsClicked() }
+            GradientButton(stringResource(id = R.string.menu_achievements), Icons.Default.Star, GradientAchievements) { viewModel.onAchievementsClicked() }
             Spacer(modifier = Modifier.height(16.dp))
-            GradientButton("Kredyty", Icons.Default.Info, GradientCredits) { viewModel.onCreditsClicked() }
+            GradientButton(stringResource(id = R.string.menu_credits), Icons.Default.Info, GradientCredits) { viewModel.onCreditsClicked() }
 
             Spacer(modifier = Modifier.height(48.dp))
-            Text("Klikaj asteroidy i zbieraj zasoby!", color = Color.LightGray, fontSize = 12.sp)
+            Text(stringResource(id = R.string.menu_subtitle), color = Color.LightGray, fontSize = 12.sp)
         }
     }
 }
