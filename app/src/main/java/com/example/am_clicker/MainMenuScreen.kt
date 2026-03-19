@@ -20,12 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 
-val BackgroundDark = Color(0xFF1A1A2E)
-val BackgroundPurple = Color(0xFF301934)
-val GradientPlay = listOf(Color(0xFF9C27B0), Color(0xFFE91E63))
-val GradientProfile = listOf(Color(0xFF2196F3), Color(0xFF00BCD4))
-val GradientAchievements = listOf(Color(0xFFFF9800), Color(0xFFFF5722))
-val GradientCredits = listOf(Color(0xFF455A64), Color(0xFF607D8B))
 
 @Composable
 fun MainMenuScreen(
