@@ -34,7 +34,11 @@ fun AppNavigation() {
 
         // 2. ADD THE NEW ROUTES TO THE NAVHOST
         composable("achievements_screen") { AchievementsScreenPlaceholder() }
-        composable("credits_screen") { CreditsScreenPlaceholder() }
+        composable("credits_screen") {
+            CreditsScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
