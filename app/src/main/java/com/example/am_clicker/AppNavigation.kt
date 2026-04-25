@@ -29,7 +29,11 @@ fun AppNavigation() {
             )
         }
 
-        composable("game_screen") { GameScreenPlaceholder() }
+        composable("game_screen") {
+            GameScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
         composable("profile_screen") { ProfileScreenPlaceholder() }
 
         // 2. ADD THE NEW ROUTES TO THE NAVHOST
