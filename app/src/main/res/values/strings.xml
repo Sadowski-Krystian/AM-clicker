@@ -29,4 +29,13 @@
     <string name="credits_made_with">Made with Kotlin and Jetpack Compose</string>
     <string name="credits_copyright">© 2026 Asteroid Clicker. All rights reserved.</string>
     <string name="credits_hint">🌟 Have you discovered all achievements yet? 🌟</string>
+
+    <string name="screen_game_title">Game</string>
+    <string name="resources_label">RESOURCES</string>
+    <string name="click_power_label">CLICK POWER</string>
+    <string name="auto_mining_label">AUTO-MINING</string>
+    <string name="click_suffix">/click</string>
+    <string name="second_suffix">/s</string>
+    <string name="click_asteroid_hint">Click the asteroid!</string>
+
 </resources>
