@@ -5,4 +5,28 @@
     <string name="menu_achievements">Achievements</string>
     <string name="menu_credits">Credits</string>
     <string name="menu_subtitle">Click asteroids and collect resources!</string>
+    <string name="credits_title">Credits</string>
+    <string name="app_version">Version 1.0.0</string>
+
+    <string name="credits_programming">Programming</string>
+    <string name="credits_prog_item1">Kotlin + Jetpack Compose</string>
+    <string name="credits_prog_item2">Coroutines (Framer Motion)</string>
+    <string name="credits_prog_item3">Navigation Compose</string>
+
+    <string name="credits_design">Design</string>
+    <string name="credits_design_item1">Material Design 3</string>
+    <string name="credits_design_item2">Lucide / Material Icons</string>
+    <string name="credits_design_item3">Gradient UI</string>
+
+    <string name="credits_tech">Technologies</string>
+    <string name="credits_tech_item1">Android Studio</string>
+    <string name="credits_tech_item2">MVVM Architecture</string>
+    <string name="credits_tech_item3">Vibration API</string>
+
+    <string name="credits_thanks_title">Thank you for playing!</string>
+    <string name="credits_thanks_desc">Click asteroids, collect resources and have fun!</string>
+
+    <string name="credits_made_with">Made with Kotlin and Jetpack Compose</string>
+    <string name="credits_copyright">© 2026 Asteroid Clicker. All rights reserved.</string>
+    <string name="credits_hint">🌟 Have you discovered all achievements yet? 🌟</string>
 </resources>
