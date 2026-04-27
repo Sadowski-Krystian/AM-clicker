@@ -22,7 +22,6 @@ Asteroid Clicker to gra mobilna na system Android, w której gracz klika w aster
 ## 🗺 Makiety przejść (Navigation Flow)
 Poniżej znajduje się wizualizacja ścieżek nawigacji użytkownika w aplikacji (np. Menu Główne $\rightarrow$ Gra, Profil). 
 
-*(Zaktualizuj poniższą ścieżkę do pliku po pobraniu obrazków z innej gałęzi)*
 
 ![Makieta przejść aplikacji](https://github.com/Sadowski-Krystian/AM-clicker/blob/chore/project-data/makieta_przejsc.png)
 
@@ -34,7 +33,6 @@ Aplikacja przechowuje stan gry lokalnie z wykorzystaniem biblioteki **Room**. Ba
 2. **`upgrades`** - Informacje o posiadanych ulepszeniach i ich poziomach.
 3. **`achievements`** - Rejestr postępów osiągnięć gracza.
 
-*(Zaktualizuj poniższą ścieżkę do pliku po pobraniu obrazków z innej gałęzi)*
 
 ![Schemat Bazy Danych (Room)](https://github.com/Sadowski-Krystian/AM-clicker/blob/chore/project-data/database_scheme.png)
 
