@@ -38,4 +38,16 @@
     <string name="click_suffix">/klik</string>
     <string name="second_suffix">/s</string>
     <string name="click_asteroid_hint">Kliknij asteroidę!</string>
+
+    <string name="screen_profile_title">Profil</string>
+    <string name="profile_clicks">KLIKNIĘCIA</string>
+    <string name="profile_upgrades">ULEPSZENIA</string>
+    <string name="profile_achievements">OSIĄGNIĘCIA</string>
+    <string name="profile_settings">Ustawienia</string>
+    <string name="profile_sound">Dźwięk</string>
+    <string name="profile_vibration">Wibracje</string>
+    <string name="profile_language">Język / Language</string>
+    <string name="profile_danger_zone">Strefa niebezpieczna</string>
+    <string name="profile_danger_desc">Spowoduje to trwałe usunięcie wszystkich danych gry. Tej akcji nie można cofnąć.</string>
+    <string name="profile_clear_data">Wyczyść wszystkie dane</string>
 </resources>

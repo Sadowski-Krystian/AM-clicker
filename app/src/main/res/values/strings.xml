@@ -38,4 +38,16 @@
     <string name="second_suffix">/s</string>
     <string name="click_asteroid_hint">Click the asteroid!</string>
 
+    <string name="screen_profile_title">Profile</string>
+    <string name="profile_clicks">CLICKS</string>
+    <string name="profile_upgrades">UPGRADES</string>
+    <string name="profile_achievements">ACHIEVEMENTS</string>
+    <string name="profile_settings">Settings</string>
+    <string name="profile_sound">Sound</string>
+    <string name="profile_vibration">Vibration</string>
+    <string name="profile_language">Language / Język</string>
+    <string name="profile_danger_zone">Danger zone</string>
+    <string name="profile_danger_desc">This will permanently delete all game data. This action cannot be undone.</string>
+    <string name="profile_clear_data">Clear all data</string>
+
 </resources>
