@@ -1,9 +1,9 @@
 package com.example.am_clicker.data
 
+
+
+ // Dodaj to na samej górze pliku, przed package, lub nad funkcją ProfileScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
-
-@file:OptIn(ExperimentalMaterial3Api::class) // Dodaj to na samej górze pliku, przed package, lub nad funkcją ProfileScreen
-
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+@OptIn(ExperimentalMaterial3Api::class)
 
 @Database(
     entities = [UserStatsEntity::class, UpgradeEntity::class, AchievementEntity::class],

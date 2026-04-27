@@ -35,9 +35,10 @@ import com.example.am_clicker.data.GameRepository
 import com.example.am_clicker.GameViewModel
 import com.example.am_clicker.GameViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(onNavigateBack: () -> Unit) {
-    // 1. Inicjalizacja bazy i viewmodelu tak jak w GameScreen
+    // 1. Inicjalizacja bazy i viewmodelu
     val context = LocalContext.current
     val database = remember { GameDatabase.getInstance(context) }
     val repository = remember { GameRepository(database.gameDao) }
@@ -165,22 +166,63 @@ fun ProfileScreen(onNavigateBack: () -> Unit) {
                     }
                 )
 
-                // Język
+                // Język (Dropdown)
+                var languageDropdownExpanded by remember { mutableStateOf(false) }
+                val languageOptions = listOf(
+                    "system" to "AUTO",
+                    "pl" to "Polski",
+                    "en" to "English"
+                )
+                val selectedOptionText = languageOptions.find { it.first == gameState.selectedLanguage }?.second ?: "AUTO"
+
                 SettingRow(
                     icon = { Icon(Icons.Default.Language, contentDescription = null, tint = Color(0xFF81C784)) },
                     title = stringResource(R.string.profile_language),
                     control = {
-                        Button(
-                            onClick = {
-                                val currentLang = AppCompatDelegate.getApplicationLocales().toLanguageTags()
-                                val newLang = if (currentLang.contains("pl")) "en" else "pl"
-
-                                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(newLang))
-                                viewModel.updateLanguage(newLang)
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A148C))
+                        ExposedDropdownMenuBox(
+                            expanded = languageDropdownExpanded,
+                            onExpandedChange = { languageDropdownExpanded = !languageDropdownExpanded }
                         ) {
-                            Text("PL / EN", color = Color.White)
+                            TextField(
+                                value = selectedOptionText,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = languageDropdownExpanded) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .width(130.dp),
+                                colors = ExposedDropdownMenuDefaults.textFieldColors(
+                                    focusedContainerColor = Color(0xFF4A148C),
+                                    unfocusedContainerColor = Color(0xFF4A148C),
+                                    focusedTextColor = Color.White,
+                                    unfocusedTextColor = Color.White,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = languageDropdownExpanded,
+                                onDismissRequest = { languageDropdownExpanded = false },
+                                modifier = Modifier.background(Color(0xFF321A65))
+                            ) {
+                                languageOptions.forEach { (code, label) ->
+                                    DropdownMenuItem(
+                                        text = { Text(label, color = Color.White) },
+                                        onClick = {
+                                            viewModel.updateLanguage(code)
+                                            val localeList = if (code == "system") {
+                                                LocaleListCompat.getEmptyLocaleList()
+                                            } else {
+                                                LocaleListCompat.forLanguageTags(code)
+                                            }
+                                            AppCompatDelegate.setApplicationLocales(localeList)
+                                            languageDropdownExpanded = false
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 )
