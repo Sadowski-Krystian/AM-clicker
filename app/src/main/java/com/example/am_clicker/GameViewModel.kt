@@ -66,6 +66,33 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
             )
         }
     }
+    fun updateSoundSettings(enabled: Boolean) {
+        viewModelScope.launch {
+            val currentStats = uiState.value
+            repository.saveStats(currentStats.copy(isSoundEnabled = enabled))
+        }
+    }
+
+    fun updateVibrationSettings(enabled: Boolean) {
+        viewModelScope.launch {
+            val currentStats = uiState.value
+            repository.saveStats(currentStats.copy(isVibrationEnabled = enabled))
+        }
+    }
+
+    fun updateLanguage(langCode: String) {
+        viewModelScope.launch {
+            val currentStats = uiState.value
+            repository.saveStats(currentStats.copy(selectedLanguage = langCode))
+        }
+    }
+
+    fun clearAllData() {
+        viewModelScope.launch {
+            // Nadpisujemy cały postęp domyślnymi (zerowymi) wartościami
+            repository.saveStats(UserStatsEntity())
+        }
+    }
 }
 
 // 4. FACTORY: Because our ViewModel needs the Repository, we need a factory to tell Android how to build it.
@@ -78,3 +105,5 @@ class GameViewModelFactory(private val repository: GameRepository) : ViewModelPr
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+
