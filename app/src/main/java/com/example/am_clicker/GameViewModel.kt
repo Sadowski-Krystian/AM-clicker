@@ -5,32 +5,55 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.am_clicker.data.GameRepository
 import com.example.am_clicker.data.UserStatsEntity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GameViewModel(private val repository: GameRepository) : ViewModel() {
 
-    // 1. THIS IS OUR STATE: It automatically updates the UI whenever the database changes
-    val uiState: StateFlow<UserStatsEntity> = repository.userStats
-        .map { stats ->
-            // If the database is completely empty (first time opening app), create a default player
-            if (stats == null) {
-                val newPlayer = UserStatsEntity()
-                repository.saveStats(newPlayer)
-                newPlayer
-            } else {
-                stats
+    // Nowa zmienna przechowująca AKTUALNĄ nazwę zalogowanego gracza.
+    // Domyślnie ładujemy "Player1"
+    private val currentUsername = MutableStateFlow("Player1")
+
+    // 1. THIS IS OUR STATE
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiState: StateFlow<UserStatsEntity> = currentUsername
+        .flatMapLatest { username ->
+            // Kiedy currentUsername się zmieni, automatycznie pobieramy nowe dane z bazy!
+            repository.getUserStats(username).map { stats ->
+                if (stats == null) {
+                    val newPlayer = UserStatsEntity(username = username)
+                    repository.saveStats(newPlayer)
+                    newPlayer
+                } else {
+                    stats
+                }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = UserStatsEntity()
+            initialValue = UserStatsEntity(username = "Player1")
         )
+
+    // NOWA FUNKCJA: Wywołasz ją z ekranu profilu po kliknięciu "Zmień"
+    fun switchUser(newUsername: String) {
+        val trimmedName = newUsername.trim()
+        if (trimmedName.isNotBlank() && trimmedName != currentUsername.value) {
+            currentUsername.value = trimmedName
+        }
+    }
+
+
+
+    // 1. THIS IS OUR STATE
+    // ZMIANA: Dodano () do getUserStats(), aby wywołać funkcję
 
     init {
         // 2. THE GAME LOOP: This runs continuously in the background for Auto-Mining

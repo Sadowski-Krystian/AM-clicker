@@ -40,19 +40,10 @@ import com.example.am_clicker.GameViewModelFactory
 
 @Composable
 fun GameScreen(
+    viewModel: GameViewModel,
     onNavigateBack: () -> Unit // Zniknął parametr viewModel, więc AppNavigation przestanie wywalać błąd!
 ) {
     // 1. EKRAN SAM TWORZY POŁĄCZENIE Z BAZĄ DANYCH
-    val context = LocalContext.current
-    val database = remember { GameDatabase.getInstance(context) }
-    val repository = remember { GameRepository(database.gameDao) }
-
-    // 2. EKRAN SAM ŁADUJE VIEWMODEL
-    val viewModel: GameViewModel = viewModel(
-        factory = GameViewModelFactory(repository)
-    )
-
-    // 3. POBIERANIE DANYCH Z BAZY
     val gameState by viewModel.uiState.collectAsStateWithLifecycle()
 
 

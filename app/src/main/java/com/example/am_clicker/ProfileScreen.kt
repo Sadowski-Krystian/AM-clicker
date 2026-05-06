@@ -37,20 +37,27 @@ import com.example.am_clicker.GameViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(onNavigateBack: () -> Unit) {
+fun ProfileScreen(
+    viewModel: GameViewModel,
+    onNavigateBack: () -> Unit
+) {
     // 1. Inicjalizacja bazy i viewmodelu
-    val context = LocalContext.current
-    val database = remember { GameDatabase.getInstance(context) }
-    val repository = remember { GameRepository(database.gameDao) }
-    val viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(repository))
 
     // 2. Pobieranie stanu z viewmodelu
     val gameState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    var usernameInput by remember { mutableStateOf(gameState.username) }
+
+    // Aktualizujemy pole, jeśli zmienimy gracza (żeby pokazywało dobrą nazwę)
+    LaunchedEffect(gameState.username) {
+        usernameInput = gameState.username
+    }
 
     val backgroundBrush = Brush.verticalGradient(
         colors = listOf(Color(0xFF2A1055), Color(0xFF130B29))
     )
 
+    // GŁÓWNA KOLUMNA EKRANU
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,6 +91,42 @@ fun ProfileScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.size(28.dp))
         }
 
+        // --- ZMIANA PROFILU (Karta przeniesiona tutaj, do środka głównej kolumny!) ---
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF321A65)) // Żeby pasowało do reszty
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = "Zarządzanie profilem", style = MaterialTheme.typography.titleMedium, color = Color.White)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = usernameInput,
+                    onValueChange = { usernameInput = it },
+                    label = { Text("Nazwa gracza", color = Color.LightGray) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Button(
+                    // ZMIANA TUTAJ: Wywołujemy viewModel.switchUser bezpośrednio!
+                    onClick = { viewModel.switchUser(usernameInput) },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = usernameInput.isNotBlank(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF81C784))
+                ) {
+                    Text("Zmień profil", color = Color(0xFF130B29), fontWeight = FontWeight.Bold)
+                }
+            }
+        }
         // --- STATS GRID ---
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             ProfileStatCard(
