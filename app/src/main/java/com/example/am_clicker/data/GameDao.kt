@@ -13,24 +13,27 @@ interface GameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdateUserStats(stats: UserStatsEntity)
 
-    // Using Flow means your UI will instantly update when stats change!
-    @Query("SELECT * FROM user_stats WHERE id = 1")
-    fun getUserStats(): Flow<UserStatsEntity?>
+    // Zmiana: Szukamy po username, a nie po sztywnym id = 1
+    @Query("SELECT * FROM user_stats WHERE username = :username")
+    fun getUserStats(username: String): Flow<UserStatsEntity?>
 
     // --- UPGRADES ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveUpgrade(upgrade: UpgradeEntity)
 
-    @Query("SELECT * FROM upgrades")
-    fun getAllUpgrades(): Flow<List<UpgradeEntity>>
+    // Zmiana: Pobieramy ulepszenia tylko dla konkretnego gracza
+    @Query("SELECT * FROM upgrades WHERE username = :username")
+    fun getAllUpgrades(username: String): Flow<List<UpgradeEntity>>
 
-    @Query("SELECT * FROM upgrades WHERE id = :upgradeId")
-    suspend fun getUpgradeById(upgradeId: String): UpgradeEntity?
+    // Zmiana: Szukamy ulepszenia po ID ORAZ po nazwie gracza (złożony klucz)
+    @Query("SELECT * FROM upgrades WHERE id = :upgradeId AND username = :username")
+    suspend fun getUpgradeById(upgradeId: String, username: String): UpgradeEntity?
 
     // --- ACHIEVEMENTS ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAchievement(achievement: AchievementEntity)
 
-    @Query("SELECT * FROM achievements")
-    fun getAllAchievements(): Flow<List<AchievementEntity>>
+    // Zmiana: Pobieramy osiągnięcia tylko dla konkretnego gracza
+    @Query("SELECT * FROM achievement WHERE username = :username")
+    fun getAllAchievements(username: String): Flow<List<AchievementEntity>>
 }
