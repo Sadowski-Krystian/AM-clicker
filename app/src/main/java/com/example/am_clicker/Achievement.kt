@@ -12,8 +12,8 @@ enum class AchievementType {
 
 data class Achievement(
     val id: Int,
-    val name: String,
-    val description: String,
+    val name: Int,
+    val description: Int,
     val icon: ImageVector,
     val targetValue: Long,
     val type: AchievementType
@@ -23,64 +23,64 @@ object AchievementData {
     val list = listOf(
         Achievement(
             id = 1,
-            name = "Beginner Clicker",
-            description = "Click the asteroid 100 times",
+            name = R.string.achiev_name_beginner_clicker,
+            description = R.string.achiev_desc_beginner_clicker,
             icon = Icons.Default.TouchApp,
             targetValue = 100L,
             type = AchievementType.CLICKS
         ),
         Achievement(
             id = 2,
-            name = "Seasoned Miner",
-            description = "Click the asteroid 1,000 times",
+            name = R.string.achiev_name_seasoned_miner,
+            description = R.string.achiev_desc_seasoned_miner,
             icon = Icons.Default.PanToolAlt,
             targetValue = 1000L,
             type = AchievementType.CLICKS
         ),
         Achievement(
             id = 3,
-            name = "Clicking Machine",
-            description = "Click the asteroid 10,000 times",
+            name = R.string.achiev_name_clicking_machine,
+            description = R.string.achiev_desc_clicking_machine,
             icon = Icons.Default.PrecisionManufacturing,
             targetValue = 10000L,
             type = AchievementType.CLICKS
         ),
         Achievement(
             id = 4,
-            name = "First Profit",
-            description = "Earn a total of 1,000 cash",
+            name = R.string.achiev_name_first_profit,
+            description = R.string.achiev_desc_first_profit,
             icon = Icons.Default.AttachMoney,
             targetValue = 1000L,
             type = AchievementType.CASH
         ),
         Achievement(
             id = 5,
-            name = "Rich Miner",
-            description = "Earn a total of 100,000 cash",
+            name = R.string.achiev_name_rich_miner,
+            description = R.string.achiev_desc_rich_miner,
             icon = Icons.Default.Savings,
             targetValue = 100000L,
             type = AchievementType.CASH
         ),
         Achievement(
             id = 6,
-            name = "Millionaire",
-            description = "Earn a total of 1,000,000 cash",
+            name = R.string.achiev_name_millionaire,
+            description = R.string.achiev_desc_millionaire,
             icon = Icons.Default.AccountBalanceWallet,
             targetValue = 1000000L,
             type = AchievementType.CASH
         ),
         Achievement(
             id = 7,
-            name = "Getting Stronger",
-            description = "Buy your first upgrade",
+            name = R.string.achiev_name_getting_stronger,
+            description = R.string.achiev_desc_getting_stronger,
             icon = Icons.Default.TrendingUp,
             targetValue = 1L,
             type = AchievementType.UPGRADES
         ),
         Achievement(
             id = 8,
-            name = "Master Optimizer",
-            description = "Buy 50 upgrades in total",
+            name = R.string.achiev_name_master_optimizer,
+            description = R.string.achiev_desc_master_optimizer,
             icon = Icons.Default.AutoFixHigh,
             targetValue = 50L,
             type = AchievementType.UPGRADES

@@ -128,13 +128,13 @@ fun AchievementCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = achievement.name,
+                    text = stringResource(achievement.name),
                     color = if (isUnlocked) Color.White else Color.Gray,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = achievement.description,
+                    text = stringResource(achievement.description),
                     color = if (isUnlocked) Color(0xFFD8B4E2) else Color.DarkGray,
                     fontSize = 12.sp
                 )
