@@ -40,6 +40,9 @@
     <string name="click_asteroid_hint">Kliknij asteroidę!</string>
 
     <string name="screen_profile_title">Profil</string>
+    <string name="profile_change_profile">Zmień Profil</string>
+    <string name="profile_manage_profile">Zarządzanie profilem</string>
+    <string name="profile_player_name">Nazwa gracza</string>
     <string name="profile_clicks">KLIKNIĘCIA</string>
     <string name="profile_upgrades">ULEPSZENIA</string>
     <string name="profile_achievements">OSIĄGNIĘCIA</string>

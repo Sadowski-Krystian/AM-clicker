@@ -39,6 +39,9 @@
     <string name="click_asteroid_hint">Click the asteroid!</string>
 
     <string name="screen_profile_title">Profile</string>
+    <string name="profile_change_profile">Change Profile</string>
+    <string name="profile_manage_profile">Manage Profile</string>
+    <string name="profile_player_name">Player name</string>
     <string name="profile_clicks">CLICKS</string>
     <string name="profile_upgrades">UPGRADES</string>
     <string name="profile_achievements">ACHIEVEMENTS</string>

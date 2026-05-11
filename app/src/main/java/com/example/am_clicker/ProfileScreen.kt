@@ -98,14 +98,14 @@ fun ProfileScreen(
             colors = CardDefaults.cardColors(containerColor = Color(0xFF321A65)) // Żeby pasowało do reszty
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "Zarządzanie profilem", style = MaterialTheme.typography.titleMedium, color = Color.White)
+                Text(text = stringResource(R.string.profile_manage_profile), style = MaterialTheme.typography.titleMedium, color = Color.White)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = usernameInput,
                     onValueChange = { usernameInput = it },
-                    label = { Text("Nazwa gracza", color = Color.LightGray) },
+                    label = { Text(stringResource(R.string.profile_player_name), color = Color.LightGray) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -123,7 +123,7 @@ fun ProfileScreen(
                     enabled = usernameInput.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF81C784))
                 ) {
-                    Text("Zmień profil", color = Color(0xFF130B29), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.profile_change_profile), color = Color(0xFF130B29), fontWeight = FontWeight.Bold)
                 }
             }
         }
