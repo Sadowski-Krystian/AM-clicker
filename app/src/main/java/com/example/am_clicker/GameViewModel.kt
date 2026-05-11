@@ -113,8 +113,14 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
 
     fun clearAllData() {
         viewModelScope.launch {
-            // Nadpisujemy cały postęp domyślnymi (zerowymi) wartościami
-            repository.saveStats(UserStatsEntity())
+            // Pobieramy nazwę aktualnie zalogowanego gracza
+            val currentUsername = uiState.value.username
+
+            // Tworzymy czysty obiekt ze statystykami, ale wymuszamy nazwę obecnego gracza
+            val resetStats = UserStatsEntity(username = currentUsername)
+
+            // Zapisujemy wyzerowane dane pod konkretnego gracza
+            repository.saveStats(resetStats)
         }
     }
 
