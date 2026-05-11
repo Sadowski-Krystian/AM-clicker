@@ -40,6 +40,9 @@
     <string name="click_asteroid_hint">Kliknij asteroidę!</string>
 
     <string name="screen_profile_title">Profil</string>
+    <string name="profile_change_profile">Zmień Profil</string>
+    <string name="profile_manage_profile">Zarządzanie profilem</string>
+    <string name="profile_player_name">Nazwa gracza</string>
     <string name="profile_clicks">KLIKNIĘCIA</string>
     <string name="profile_upgrades">ULEPSZENIA</string>
     <string name="profile_achievements">OSIĄGNIĘCIA</string>
@@ -50,4 +53,24 @@
     <string name="profile_danger_zone">Strefa niebezpieczna</string>
     <string name="profile_danger_desc">Spowoduje to trwałe usunięcie wszystkich danych gry. Tej akcji nie można cofnąć.</string>
     <string name="profile_clear_data">Wyczyść wszystkie dane</string>
+
+    <!-- Osiągnięcia: Nazwy -->
+    <string name="achiev_name_beginner_clicker">Początkujący Klikacz</string>
+    <string name="achiev_name_seasoned_miner">Doświadczony Górnik</string>
+    <string name="achiev_name_clicking_machine">Maszyna do Klikania</string>
+    <string name="achiev_name_first_profit">Pierwszy Zysk</string>
+    <string name="achiev_name_rich_miner">Bogaty Górnik</string>
+    <string name="achiev_name_millionaire">Milioner</string>
+    <string name="achiev_name_getting_stronger">Coraz Silniejszy</string>
+    <string name="achiev_name_master_optimizer">Mistrz Optymalizacji</string>
+
+    <!-- Osiągnięcia: Opisy -->
+    <string name="achiev_desc_beginner_clicker">Kliknij asteroidę 100 razy</string>
+    <string name="achiev_desc_seasoned_miner">Kliknij asteroidę 1000 razy</string>
+    <string name="achiev_desc_clicking_machine">Kliknij asteroidę 10 000 razy</string>
+    <string name="achiev_desc_first_profit">Zarób łącznie 1000 gotówki</string>
+    <string name="achiev_desc_rich_miner">Zarób łącznie 100 000 gotówki</string>
+    <string name="achiev_desc_millionaire">Zarób łącznie 1 000 000 gotówki</string>
+    <string name="achiev_desc_getting_stronger">Kup swoje pierwsze ulepszenie</string>
+    <string name="achiev_desc_master_optimizer">Kup łącznie 50 ulepszeń</string>
 </resources>

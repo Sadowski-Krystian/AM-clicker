@@ -41,7 +41,8 @@ fun AppNavigation() {
         composable("game_screen") {
             GameScreen(
                 viewModel = gameViewModel, // 2. PRZEKAZUJEMY WSPÓLNY VIEWMODEL DO GRY
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToAchievements = { navController.navigate("achievements_screen") }
             )
         }
 
@@ -52,7 +53,12 @@ fun AppNavigation() {
             )
         }
 
-        composable("achievements_screen") { AchievementsScreenPlaceholder() }
+        composable("achievements_screen") {
+            AchievementsScreen(
+                viewModel = gameViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
         composable("credits_screen") {
             CreditsScreen(
                 onNavigateBack = { navController.popBackStack() }
@@ -61,32 +67,4 @@ fun AppNavigation() {
     }
 }
 
-// Existing Placeholders
-@Composable
-fun GameScreenPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Game Screen", fontSize = 24.sp, color = Color.White)
-    }
-}
 
-@Composable
-fun ProfileScreenPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Profile Screen", fontSize = 24.sp, color = Color.White)
-    }
-}
-
-// 3. ADD THE NEW PLACEHOLDER SCREENS AT THE BOTTOM
-@Composable
-fun AchievementsScreenPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Osiągnięcia Screen", fontSize = 24.sp, color = Color.White)
-    }
-}
-
-@Composable
-fun CreditsScreenPlaceholder() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Kredyty Screen", fontSize = 24.sp, color = Color.White)
-    }
-}

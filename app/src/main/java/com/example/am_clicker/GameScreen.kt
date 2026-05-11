@@ -41,7 +41,8 @@ import com.example.am_clicker.GameViewModelFactory
 @Composable
 fun GameScreen(
     viewModel: GameViewModel,
-    onNavigateBack: () -> Unit // Zniknął parametr viewModel, więc AppNavigation przestanie wywalać błąd!
+    onNavigateBack: () -> Unit,
+    onNavigateToAchievements: () -> Unit
 ) {
     // 1. EKRAN SAM TWORZY POŁĄCZENIE Z BAZĄ DANYCH
     val gameState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -102,7 +103,7 @@ fun GameScreen(
                         .size(36.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFFE67E22))
-                        .clickable { /* TODO */ },
+                        .clickable { onNavigateToAchievements() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(Icons.Default.Star, contentDescription = "Achievements", tint = Color.White, modifier = Modifier.size(20.dp))

@@ -39,6 +39,9 @@
     <string name="click_asteroid_hint">Click the asteroid!</string>
 
     <string name="screen_profile_title">Profile</string>
+    <string name="profile_change_profile">Change Profile</string>
+    <string name="profile_manage_profile">Manage Profile</string>
+    <string name="profile_player_name">Player name</string>
     <string name="profile_clicks">CLICKS</string>
     <string name="profile_upgrades">UPGRADES</string>
     <string name="profile_achievements">ACHIEVEMENTS</string>
@@ -49,5 +52,25 @@
     <string name="profile_danger_zone">Danger zone</string>
     <string name="profile_danger_desc">This will permanently delete all game data. This action cannot be undone.</string>
     <string name="profile_clear_data">Clear all data</string>
+
+    <!-- Ociągnięcia: Nazwy -->
+    <string name="achiev_name_beginner_clicker">Beginner Clicker</string>
+    <string name="achiev_name_seasoned_miner">Seasoned Miner</string>
+    <string name="achiev_name_clicking_machine">Clicking Machine</string>
+    <string name="achiev_name_first_profit">First Profit</string>
+    <string name="achiev_name_rich_miner">Rich Miner</string>
+    <string name="achiev_name_millionaire">Millionaire</string>
+    <string name="achiev_name_getting_stronger">Getting Stronger</string>
+    <string name="achiev_name_master_optimizer">Master Optimizer</string>
+
+    <!-- Osiągnięcia: Opisy -->
+    <string name="achiev_desc_beginner_clicker">Click the asteroid 100 times</string>
+    <string name="achiev_desc_seasoned_miner">Click the asteroid 1,000 times</string>
+    <string name="achiev_desc_clicking_machine">Click the asteroid 10,000 times</string>
+    <string name="achiev_desc_first_profit">Earn a total of 1,000 cash</string>
+    <string name="achiev_desc_rich_miner">Earn a total of 100,000 cash</string>
+    <string name="achiev_desc_millionaire">Earn a total of 1,000,000 cash</string>
+    <string name="achiev_desc_getting_stronger">Buy your first upgrade</string>
+    <string name="achiev_desc_master_optimizer">Buy 50 upgrades in total</string>
 
 </resources>
