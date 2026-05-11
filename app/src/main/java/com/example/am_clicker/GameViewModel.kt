@@ -3,6 +3,7 @@ package com.example.am_clicker
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.am_clicker.data.AchievementEntity
 import com.example.am_clicker.data.GameRepository
 import com.example.am_clicker.data.UserStatsEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -116,6 +117,51 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
             repository.saveStats(UserStatsEntity())
         }
     }
+
+    fun checkAndSaveAchievements() {
+        viewModelScope.launch {
+            val currentStats = uiState.value
+            val username = currentStats.username
+
+            // Zmienna do zliczania odblokowanych osiągnięć w tej sesji sprawdzania
+            var unlockedCount = 0
+
+            // 1. Sprawdzamy i zapisujemy osiągnięcia
+            AchievementData.list.forEach { achievement ->
+                val progressValue = when (achievement.type) {
+                    AchievementType.CLICKS -> currentStats.totalClicks
+                    AchievementType.CASH -> currentStats.totalCashEarned
+                    AchievementType.UPGRADES -> currentStats.totalUpgradesBought.toLong()
+                }
+
+                val isUnlocked = progressValue >= achievement.targetValue
+
+                // Jeśli odblokowane, zwiększamy nasz licznik
+                if (isUnlocked) {
+                    unlockedCount++
+                }
+
+                val entity = AchievementEntity(
+                    username = username,
+                    id = achievement.id,
+                    progress = progressValue,
+                    isUnlocked = isUnlocked
+                )
+
+                repository.saveAchievement(entity)
+            }
+
+            // 2. Aktualizujemy statystyki gracza, jeśli zdobył nowe osiągnięcie
+            if (unlockedCount != currentStats.totalAchievementsUnlocked) {
+                // Tworzymy kopię obecnych statystyk ze zaktualizowaną liczbą osiągnięć
+                val updatedStats = currentStats.copy(
+                    totalAchievementsUnlocked = unlockedCount
+                )
+                // Zapisujemy nowe statystyki do bazy danych
+                repository.saveStats(updatedStats) // Upewnij się, że nazwa funkcji w repozytorium to np. saveStats lub insertOrUpdateUserStats
+            }
+        }
+    }
 }
 
 // 4. FACTORY: Because our ViewModel needs the Repository, we need a factory to tell Android how to build it.
@@ -128,5 +174,7 @@ class GameViewModelFactory(private val repository: GameRepository) : ViewModelPr
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+
 
 

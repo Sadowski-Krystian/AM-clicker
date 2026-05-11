@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,12 @@ fun AchievementsScreen(
     onNavigateBack: () -> Unit
 ) {
     val gameState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // --- NOWY KOD: Wyzwala się po wejściu na ekran ---
+    LaunchedEffect(Unit) {
+        viewModel.checkAndSaveAchievements()
+    }
+    // ------------------------------------------------
 
     val backgroundBrush = Brush.verticalGradient(
         colors = listOf(Color(0xFF2A1055), Color(0xFF130B29))
@@ -78,7 +85,7 @@ fun AchievementsScreen(
                     AchievementType.CASH -> gameState.totalCashEarned
                     AchievementType.UPGRADES -> gameState.totalUpgradesBought.toLong()
                 }
-                
+
                 AchievementCard(
                     achievement = achievement,
                     currentProgress = progressValue
