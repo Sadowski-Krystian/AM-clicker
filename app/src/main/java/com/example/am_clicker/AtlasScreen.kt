@@ -48,22 +48,22 @@ fun AtlasScreen(
     // Lista 16 obiektów do kupienia (8 planet + 8 innych)
     val celestialBodies = remember {
         listOf(
-            CelestialBody(1, "Merkury", 100L, android.R.drawable.ic_menu_help), // Podmień ikony na swoje R.drawable.merkury itd.
-            CelestialBody(2, "Wenus", 500L, android.R.drawable.ic_menu_help),
-            CelestialBody(3, "Ziemia", 1500L, android.R.drawable.ic_menu_help),
-            CelestialBody(4, "Mars", 4000L, android.R.drawable.ic_menu_help),
-            CelestialBody(5, "Jowisz", 10000L, android.R.drawable.ic_menu_help),
-            CelestialBody(6, "Saturn", 25000L, android.R.drawable.ic_menu_help),
-            CelestialBody(7, "Uran", 60000L, android.R.drawable.ic_menu_help),
-            CelestialBody(8, "Neptun", 150000L, android.R.drawable.ic_menu_help),
-            CelestialBody(9, "Księżyc", 300000L, android.R.drawable.ic_menu_help),
-            CelestialBody(10, "Słońce", 1000000L, android.R.drawable.ic_menu_help),
-            CelestialBody(11, "Syriusz", 5000000L, android.R.drawable.ic_menu_help),
-            CelestialBody(12, "Czarna Dziura", 15000000L, android.R.drawable.ic_menu_help),
-            CelestialBody(13, "Kwazar", 50000000L, android.R.drawable.ic_menu_help),
-            CelestialBody(14, "Pulsar", 100000000L, android.R.drawable.ic_menu_help),
-            CelestialBody(15, "Mgławica", 500000000L, android.R.drawable.ic_menu_help),
-            CelestialBody(16, "Galaktyka", 1000000000L, android.R.drawable.ic_menu_help)
+            CelestialBody(1, "Merkury", 100L, R.drawable.merkury), // Podmień ikony na swoje R.drawable.merkury itd.
+            CelestialBody(2, "Wenus", 500L, R.drawable.wenus),
+            CelestialBody(3, "Ziemia", 1500L, R.drawable.ziemia),
+            CelestialBody(4, "Mars", 4000L, R.drawable.mars),
+            CelestialBody(5, "Jowisz", 10000L, R.drawable.jowisz),
+            CelestialBody(6, "Saturn", 25000L, R.drawable.saturn),
+            CelestialBody(7, "Uran", 60000L, R.drawable.uran),
+            CelestialBody(8, "Neptun", 150000L, R.drawable.neptun),
+            CelestialBody(9, "Księżyc", 300000L, R.drawable.ksiezyc),
+            CelestialBody(10, "Słońce", 1000000L, R.drawable.slonce),
+            CelestialBody(11, "Syriusz", 5000000L, R.drawable.syriusz),
+            CelestialBody(12, "Czarna Dziura", 15000000L, R.drawable.czarna_dziura),
+            CelestialBody(13, "Kwazar", 50000000L, R.drawable.kwazar),
+            CelestialBody(14, "Pulsar", 100000000L, R.drawable.pulsar),
+            CelestialBody(15, "Mgławica", 500000000L, R.drawable.nebula),
+            CelestialBody(16, "Galaktyka", 1000000000L, R.drawable.galaktyka)
         )
     }
 
