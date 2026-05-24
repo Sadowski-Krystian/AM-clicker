@@ -1,5 +1,6 @@
 package com.example.am_clicker
 
+import android.net.Uri
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,8 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,11 +21,18 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 
 @Composable
 fun CreditsScreen(onNavigateBack: () -> Unit) {
@@ -40,6 +47,13 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
         ),
         label = "logo_spin"
     )
+
+    // Zmienne do odtwarzacza wideo
+    var isFullscreen by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val videoUri = remember {
+        Uri.parse("android.resource://${context.packageName}/${R.raw.mp4}")
+    }
 
     Box(
         modifier = Modifier
@@ -150,14 +164,72 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
                 }
             }
 
-            // --- FOOTER ---
+            // --- WIDEO PROMOCYJNE ---
             Spacer(modifier = Modifier.height(32.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.PlayCircleOutline, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Trailer", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (!isFullscreen) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp))
+                        .background(Color.Black)
+                ) {
+                    PromoVideoPlayer(videoUri = videoUri)
+
+                    IconButton(
+                        onClick = { isFullscreen = true },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                            .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                    ) {
+                        Icon(Icons.Default.Fullscreen, contentDescription = "Pełny ekran", tint = Color.White)
+                    }
+                }
+            }
+
+            // --- FOOTER ---
+            Spacer(modifier = Modifier.height(48.dp))
             Text(stringResource(id = R.string.credits_made_with), color = Color(0xFF9C27B0), fontSize = 12.sp)
             Spacer(modifier = Modifier.height(4.dp))
             Text(stringResource(id = R.string.credits_copyright), color = Color(0xFF6A1B9A), fontSize = 12.sp, textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(16.dp))
             Text(stringResource(id = R.string.credits_hint), color = Color.Yellow, fontSize = 12.sp)
             Spacer(modifier = Modifier.height(48.dp))
+        }
+    }
+
+    // --- LOGIKA PEŁNEGO EKRANU (Dialog rysuje się na wierzchu wszystkiego) ---
+    if (isFullscreen) {
+        Dialog(
+            onDismissRequest = { isFullscreen = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            ) {
+                PromoVideoPlayer(videoUri = videoUri)
+
+                IconButton(
+                    onClick = { isFullscreen = false },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                ) {
+                    Icon(Icons.Default.FullscreenExit, contentDescription = "Wyjdź", tint = Color.White)
+                }
+            }
         }
     }
 }
@@ -201,4 +273,35 @@ fun CreditCard(title: String, icon: ImageVector, items: List<String>) {
             }
         }
     }
+}
+
+// Komponent odtwarzacza wideo Media3
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+@Composable
+fun PromoVideoPlayer(videoUri: Uri) {
+    val context = LocalContext.current
+
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context).build().apply {
+            setMediaItem(MediaItem.fromUri(videoUri))
+            prepare()
+            playWhenReady = false
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            exoPlayer.release()
+        }
+    }
+
+    AndroidView(
+        factory = { ctx ->
+            PlayerView(ctx).apply {
+                player = exoPlayer
+                useController = true
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }
