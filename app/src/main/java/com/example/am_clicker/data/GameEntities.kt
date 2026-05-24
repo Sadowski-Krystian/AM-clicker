@@ -64,3 +64,21 @@ data class AchievementEntity(
     val progress: Long,
     val isUnlocked: Boolean
 )
+
+// 4. The Cosmic Atlas Progress
+@Entity(
+    tableName = "atlas_unlocked",
+    primaryKeys = ["username", "planetId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = UserStatsEntity::class,
+            parentColumns = ["username"],
+            childColumns = ["username"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class AtlasEntity(
+    val username: String,
+    val planetId: Int
+)

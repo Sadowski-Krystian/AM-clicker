@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -51,11 +52,6 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
         }
     }
 
-
-
-    // 1. THIS IS OUR STATE
-    // ZMIANA: Dodano () do getUserStats(), aby wywołać funkcję
-
     init {
         // 2. THE GAME LOOP: This runs continuously in the background for Auto-Mining
         viewModelScope.launch {
@@ -90,6 +86,7 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
             )
         }
     }
+
     fun updateSoundSettings(enabled: Boolean) {
         viewModelScope.launch {
             val currentStats = uiState.value
@@ -164,7 +161,39 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
                     totalAchievementsUnlocked = unlockedCount
                 )
                 // Zapisujemy nowe statystyki do bazy danych
-                repository.saveStats(updatedStats) // Upewnij się, że nazwa funkcji w repozytorium to np. saveStats lub insertOrUpdateUserStats
+                repository.saveStats(updatedStats)
+            }
+        }
+    }
+
+    // --- ATLAS / PLANETY ---
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val unlockedPlanets: StateFlow<Set<Int>> = currentUsername
+        .flatMapLatest { username ->
+            repository.getUnlockedPlanets(username)
+        }
+        .map { it.toSet() }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
+
+    fun buyPlanet(planetId: Int, cost: Long) {
+        viewModelScope.launch {
+            // Zapisujemy bieżącego użytkownika w zmiennej
+            val activeUser = currentUsername.value
+
+            // Pobieramy aktualne statystyki TEGO KONKRETNEGO gracza prosto z bazy
+            val currentStats = repository.getUserStats(activeUser).firstOrNull() ?: return@launch
+
+            if (currentStats.currentCash >= cost) {
+                // 1. Odejmujemy koszt od obecnej gotówki
+                val newCash = currentStats.currentCash - cost
+
+                // 2. Aktualizujemy statystyki w bazie (gracz traci pieniądze)
+                val updatedStats = currentStats.copy(currentCash = newCash)
+                repository.saveStats(updatedStats)
+
+                // 3. Dodajemy planetę do bazy jako odblokowaną z poprawną nazwą użytkownika
+                repository.unlockPlanet(planetId, activeUser)
             }
         }
     }
@@ -180,7 +209,3 @@ class GameViewModelFactory(private val repository: GameRepository) : ViewModelPr
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
-
-
-

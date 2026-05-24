@@ -39,9 +39,11 @@ fun AtlasScreen(
     viewModel: GameViewModel,
     onNavigateBack: () -> Unit
 ) {
-    // Odczytujemy stan gry (żeby wiedzieć ile mamy kasy)
     val gameState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentCash = gameState.currentCash
+
+    // Odczytujemy prawdziwe odblokowane planety z bazy danych
+    val unlockedBodies by viewModel.unlockedPlanets.collectAsStateWithLifecycle()
 
     // Lista 16 obiektów do kupienia (8 planet + 8 innych)
     val celestialBodies = remember {
@@ -66,7 +68,7 @@ fun AtlasScreen(
     }
 
     // Tymczasowy stan odblokowanych planet (później przeniesiemy to do bazy)
-    var unlockedBodies by remember { mutableStateOf(setOf<Int>()) }
+//    var unlockedBodies by remember { mutableStateOf(setOf<Int>()) }
 
     Box(
         modifier = Modifier
@@ -132,9 +134,8 @@ fun AtlasScreen(
                         canAfford = canAfford,
                         onClick = {
                             if (!isUnlocked && canAfford) {
-                                // Tu docelowo wywołamy funkcję viewModelu odejmującą kasę i zapisującą do bazy
-                                // Na razie symulujemy:
-                                unlockedBodies = unlockedBodies + body.id
+                                // Wywołujemy nową funkcję z bazy!
+                                viewModel.buyPlanet(body.id, body.cost)
                             }
                         }
                     )

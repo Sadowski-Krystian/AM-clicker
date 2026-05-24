@@ -15,8 +15,8 @@ import androidx.room.RoomDatabase
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Database(
-    entities = [UserStatsEntity::class, UpgradeEntity::class, AchievementEntity::class],
-    version = 3,
+    entities = [UserStatsEntity::class, UpgradeEntity::class, AchievementEntity::class, AtlasEntity::class],
+    version = 4,
     exportSchema = false
 )
 abstract class GameDatabase : RoomDatabase() {

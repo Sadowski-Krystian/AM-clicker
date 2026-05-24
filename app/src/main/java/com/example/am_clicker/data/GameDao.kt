@@ -36,4 +36,12 @@ interface GameDao {
     // Zmiana: Pobieramy osiągnięcia tylko dla konkretnego gracza
     @Query("SELECT * FROM achievement WHERE username = :username")
     fun getAllAchievements(username: String): Flow<List<AchievementEntity>>
+
+    // --- ATLAS ---
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun unlockPlanet(atlasEntity: AtlasEntity)
+
+    // Zwraca tylko listę ID odblokowanych planet dla danego gracza
+    @Query("SELECT planetId FROM atlas_unlocked WHERE username = :username")
+    fun getUnlockedPlanets(username: String): Flow<List<Int>>
 }
