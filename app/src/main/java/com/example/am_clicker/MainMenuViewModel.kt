@@ -11,6 +11,7 @@ sealed class MainMenuEvent {
     object NavigateToProfile : MainMenuEvent()
     object NavigateToAchievements : MainMenuEvent()
     object NavigateToCredits : MainMenuEvent()
+    object NavigateToAtlas : MainMenuEvent() // <-- DODANE ZDARZENIE ATLASU
 }
 
 class MainMenuViewModel : ViewModel() {
@@ -21,4 +22,5 @@ class MainMenuViewModel : ViewModel() {
     fun onProfileClicked() { viewModelScope.launch { _menuEvents.emit(MainMenuEvent.NavigateToProfile) } }
     fun onAchievementsClicked() { viewModelScope.launch { _menuEvents.emit(MainMenuEvent.NavigateToAchievements) } }
     fun onCreditsClicked() { viewModelScope.launch { _menuEvents.emit(MainMenuEvent.NavigateToCredits) } }
+    fun onAtlasClicked() { viewModelScope.launch { _menuEvents.emit(MainMenuEvent.NavigateToAtlas) } } // <-- DODANA FUNKCJA ATLASU
 }
