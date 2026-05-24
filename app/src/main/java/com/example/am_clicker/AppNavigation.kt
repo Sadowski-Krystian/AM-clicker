@@ -1,4 +1,5 @@
 package com.example.am_clicker
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -20,7 +21,6 @@ import com.example.am_clicker.data.GameRepository
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // 1. TWORZYMY BAZĘ I VIEWMODEL TYLKO RAZ TUTAJ!
     val context = LocalContext.current
     val database = remember { GameDatabase.getInstance(context) }
     val repository = remember { GameRepository(database.gameDao) }
@@ -34,21 +34,24 @@ fun AppNavigation() {
                 onNavigateToGame = { navController.navigate("game_screen") },
                 onNavigateToProfile = { navController.navigate("profile_screen") },
                 onNavigateToAchievements = { navController.navigate("achievements_screen") },
-                onNavigateToCredits = { navController.navigate("credits_screen") }
+                onNavigateToCredits = { navController.navigate("credits_screen") },
+                // Dodajemy nawigację do atlasu (będziesz musiał dodać ten parametr w MainMenuScreen)
+                onNavigateToAtlas = { navController.navigate("atlas_screen") }
             )
         }
 
         composable("game_screen") {
             GameScreen(
-                viewModel = gameViewModel, // 2. PRZEKAZUJEMY WSPÓLNY VIEWMODEL DO GRY
+                viewModel = gameViewModel,
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToAchievements = { navController.navigate("achievements_screen") }
+                // Możesz tu też dodać onNavigateToAtlas, jeśli wolisz sklep wewnątrz gry!
             )
         }
 
         composable("profile_screen") {
             ProfileScreen(
-                viewModel = gameViewModel, // 3. PRZEKAZUJEMY TEN SAM VIEWMODEL DO PROFILU
+                viewModel = gameViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
@@ -59,12 +62,19 @@ fun AppNavigation() {
                 onNavigateBack = { navController.popBackStack() }
             )
         }
+
         composable("credits_screen") {
             CreditsScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
+
+        // --- NOWY EKRAN KOSMICZNEGO ATLASU ---
+        composable("atlas_screen") {
+            AtlasScreen(
+                viewModel = gameViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
-
-

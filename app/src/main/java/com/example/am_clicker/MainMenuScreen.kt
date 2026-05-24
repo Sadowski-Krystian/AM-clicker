@@ -26,11 +26,10 @@ fun MainMenuScreen(
     viewModel: MainMenuViewModel,
     onNavigateToGame: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    // 1. ADD THE TWO NEW CALLBACKS HERE:
     onNavigateToAchievements: () -> Unit,
-    onNavigateToCredits: () -> Unit
+    onNavigateToCredits: () -> Unit,
+    onNavigateToAtlas: () -> Unit // <-- 1. DODANY PARAMETR NAWIGACJI
 ) {
-    // 2. UPDATE THIS LISTENER TO HANDLE ALL 4 EVENTS:
     LaunchedEffect(Unit) {
         viewModel.menuEvents.collect { event ->
             when (event) {
@@ -38,6 +37,7 @@ fun MainMenuScreen(
                 is MainMenuEvent.NavigateToProfile -> onNavigateToProfile()
                 is MainMenuEvent.NavigateToAchievements -> onNavigateToAchievements()
                 is MainMenuEvent.NavigateToCredits -> onNavigateToCredits()
+                is MainMenuEvent.NavigateToAtlas -> onNavigateToAtlas() // <-- 2. OBSŁUGA NOWEGO ZDARZENIA
             }
         }
     }
@@ -59,6 +59,15 @@ fun MainMenuScreen(
             Spacer(modifier = Modifier.height(16.dp))
             GradientButton(stringResource(id = R.string.menu_achievements), Icons.Default.Star, GradientAchievements) { viewModel.onAchievementsClicked() }
             Spacer(modifier = Modifier.height(16.dp))
+
+            // <-- 3. NOWY PRZYCISK ATLASU Z ŁADNYM GRADIENTEM
+            GradientButton(
+                text = "Kosmiczny Atlas",
+                icon = Icons.Default.Public,
+                colors = listOf(Color(0xFF00C9FF), Color(0xFF92FE9D))
+            ) { viewModel.onAtlasClicked() }
+            Spacer(modifier = Modifier.height(16.dp))
+
             GradientButton(stringResource(id = R.string.menu_credits), Icons.Default.Info, GradientCredits) { viewModel.onCreditsClicked() }
 
             Spacer(modifier = Modifier.height(48.dp))

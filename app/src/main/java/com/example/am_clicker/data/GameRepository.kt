@@ -33,4 +33,12 @@ class GameRepository(private val dao: GameDao) {
     suspend fun saveAchievement(achievement: AchievementEntity) {
         dao.saveAchievement(achievement)
     }
+
+    fun getUnlockedPlanets(username: String = "Player1"): Flow<List<Int>> {
+        return dao.getUnlockedPlanets(username)
+    }
+
+    suspend fun unlockPlanet(planetId: Int, username: String = "Player1") {
+        dao.unlockPlanet(AtlasEntity(username, planetId))
+    }
 }
