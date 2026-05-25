@@ -32,9 +32,26 @@ Aplikacja przechowuje stan gry lokalnie z wykorzystaniem biblioteki **Room**. Ba
 1. **`user_stats`** - Globalne statystyki gracza (np. `currentCash`, `clickPower`, `passiveIncomePerSecond`) oraz jego preferencje (`isSoundEnabled`, `selectedLanguage`).
 2. **`upgrades`** - Informacje o posiadanych ulepszeniach i ich poziomach.
 3. **`achievements`** - Rejestr postępów osiągnięć gracza.
+4. **`atlas_unlocked`** - Rejestr odblokowanych planet w atlasie
+
+## 🔄 Repozytorium
+Aplikacja kożysta z repozytorium w celu komunikacji między bazą danych `GameRepository`
+- Zwraca dane w formie strumieni `(Flow<T>)`, dzięki czemu każdy nowy zakup, zmiana gotówki czy odblokowana planeta automatycznie i natychmiastowo aktualizuje interfejs użytkownika.
+- Zawiera asynchroniczne funkcje (np. `saveStats`, `unlockPlanet`) do bezpiecznego zapisywania postępów w tle, by nie zaciąć ekranu gry.
+
+## 🧠 ViewModel
+
+Aplikacja posiada 2 główne ViewModele:
+1. `GameViewModel` (Główny silnik gry):
+    - **Zarzadzanie stanem**: Śledzi który gracz jest zalogowany i pobiera jego dane oraz jest odpowiedzialny za zmianę gracza `switchUser`.
+    - **Pętla Gry**: Posiada działającą w tle pętlę asynchroniczną która co sekunde dodaje graczowi pasywny dochód pod warunkiem że gracz wykupił odpowiednie ulepszenie.
+    - **Obsługa Akcji**: Zmiany wywołane kliknięciami, takie jak kliknięcie w asteroidę `onAsteroidClicked` kupowanie planet `buyPlanet` są przeliczane w modelu i wysyłane do bazy poprzez repozytorium
+2. `MainMenuViewModel`:
+    - Odpowiada za logikę wyłącznie Menu Głównego. Zmienia kliknięca przycisków w jednorazowe zdarzenia.
 
 
 ![Schemat Bazy Danych (Room)](https://github.com/Sadowski-Krystian/AM-clicker/blob/chore/project-data/database_scheme.png)
+
 
 ---
 
