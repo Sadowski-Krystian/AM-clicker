@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import com.example.am_clicker.data.UpgradeEntity
+import kotlinx.coroutines.flow.first
+import kotlin.math.pow
 
 class GameViewModel(private val repository: GameRepository) : ViewModel() {
 
@@ -44,6 +47,17 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
             initialValue = UserStatsEntity(username = "Player1")
         )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val ownedUpgrades: StateFlow<List<UpgradeEntity>> = currentUsername
+        .flatMapLatest { username ->
+            repository.getAllUpgrades(username)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList<UpgradeEntity>()
+        )
+
     // NOWA FUNKCJA: Wywołasz ją z ekranu profilu po kliknięciu "Zmień"
     fun switchUser(newUsername: String) {
         val trimmedName = newUsername.trim()
@@ -57,16 +71,19 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
         viewModelScope.launch {
             while (true) {
                 delay(1000) // Wait exactly 1 second
-                val currentStats = uiState.value
+                
+                val username = currentUsername.value
+                val currentStats = repository.getUserStats(username).first() ?: continue
 
                 // If the player has auto-mining power, add it to their cash
                 if (currentStats.passiveIncomePerSecond > 0) {
-                    repository.saveStats(
-                        currentStats.copy(
-                            currentCash = currentStats.currentCash + currentStats.passiveIncomePerSecond,
-                            totalCashEarned = currentStats.totalCashEarned + currentStats.passiveIncomePerSecond
-                        )
+                    val updatedStats = currentStats.copy(
+                        currentCash = currentStats.currentCash + currentStats.passiveIncomePerSecond,
+                        totalCashEarned = currentStats.totalCashEarned + currentStats.passiveIncomePerSecond
                     )
+                    repository.saveStats(updatedStats)
+                    // Check achievements using the UPDATED stats
+                    checkAndSaveAchievements(updatedStats)
                 }
             }
         }
@@ -75,15 +92,16 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
     // 3. THE CLICK ACTION: Called whenever the asteroid is tapped
     fun onAsteroidClicked() {
         viewModelScope.launch {
-            val currentStats = uiState.value
+            val username = currentUsername.value
+            val currentStats = repository.getUserStats(username).first() ?: return@launch
 
-            repository.saveStats(
-                currentStats.copy(
-                    currentCash = currentStats.currentCash + currentStats.clickPower,
-                    totalCashEarned = currentStats.totalCashEarned + currentStats.clickPower,
-                    totalClicks = currentStats.totalClicks + 1
-                )
+            val updatedStats = currentStats.copy(
+                currentCash = currentStats.currentCash + currentStats.clickPower,
+                totalCashEarned = currentStats.totalCashEarned + currentStats.clickPower,
+                totalClicks = currentStats.totalClicks + 1
             )
+            repository.saveStats(updatedStats)
+            checkAndSaveAchievements(updatedStats)
         }
     }
 
@@ -113,56 +131,55 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
             // Pobieramy nazwę aktualnie zalogowanego gracza
             val currentUsername = uiState.value.username
 
-            // Tworzymy czysty obiekt ze statystykami, ale wymuszamy nazwę obecnego gracza
-            val resetStats = UserStatsEntity(username = currentUsername)
+            // 1. Usuwamy gracza z bazy ( CASCADE usunie też ulepszenia i osiągnięcia )
+            repository.deleteUser(currentUsername)
 
-            // Zapisujemy wyzerowane dane pod konkretnego gracza
+            // 2. Tworzymy czysty obiekt ze statystykami i zapisujemy go (reinkarnacja gracza)
+            val resetStats = UserStatsEntity(username = currentUsername)
             repository.saveStats(resetStats)
         }
     }
 
-    fun checkAndSaveAchievements() {
-        viewModelScope.launch {
-            val currentStats = uiState.value
-            val username = currentStats.username
+    suspend fun checkAndSaveAchievements(statsToUse: UserStatsEntity? = null) {
+        val currentStats = statsToUse ?: repository.getUserStats(currentUsername.value).first() ?: return
+        val username = currentStats.username
 
-            // Zmienna do zliczania odblokowanych osiągnięć w tej sesji sprawdzania
-            var unlockedCount = 0
+        // Zmienna do zliczania odblokowanych osiągnięć w tej sesji sprawdzania
+        var unlockedCount = 0
 
-            // 1. Sprawdzamy i zapisujemy osiągnięcia
-            AchievementData.list.forEach { achievement ->
-                val progressValue = when (achievement.type) {
-                    AchievementType.CLICKS -> currentStats.totalClicks
-                    AchievementType.CASH -> currentStats.totalCashEarned
-                    AchievementType.UPGRADES -> currentStats.totalUpgradesBought.toLong()
-                }
-
-                val isUnlocked = progressValue >= achievement.targetValue
-
-                // Jeśli odblokowane, zwiększamy nasz licznik
-                if (isUnlocked) {
-                    unlockedCount++
-                }
-
-                val entity = AchievementEntity(
-                    username = username,
-                    id = achievement.id,
-                    progress = progressValue,
-                    isUnlocked = isUnlocked
-                )
-
-                repository.saveAchievement(entity)
+        // 1. Sprawdzamy i zapisujemy osiągnięcia
+        AchievementData.list.forEach { achievement ->
+            val progressValue = when (achievement.type) {
+                AchievementType.CLICKS -> currentStats.totalClicks
+                AchievementType.CASH -> currentStats.totalCashEarned
+                AchievementType.UPGRADES -> currentStats.totalUpgradesBought.toLong()
             }
 
-            // 2. Aktualizujemy statystyki gracza, jeśli zdobył nowe osiągnięcie
-            if (unlockedCount != currentStats.totalAchievementsUnlocked) {
-                // Tworzymy kopię obecnych statystyk ze zaktualizowaną liczbą osiągnięć
-                val updatedStats = currentStats.copy(
-                    totalAchievementsUnlocked = unlockedCount
-                )
-                // Zapisujemy nowe statystyki do bazy danych
-                repository.saveStats(updatedStats)
+            val isUnlocked = progressValue >= achievement.targetValue
+
+            // Jeśli odblokowane, zwiększamy nasz licznik
+            if (isUnlocked) {
+                unlockedCount++
             }
+
+            val entity = AchievementEntity(
+                username = username,
+                id = achievement.id,
+                progress = progressValue,
+                isUnlocked = isUnlocked
+            )
+
+            repository.saveAchievement(entity)
+        }
+
+        // 2. Aktualizujemy statystyki gracza, jeśli zdobył nowe osiągnięcie
+        if (unlockedCount != currentStats.totalAchievementsUnlocked) {
+            // Tworzymy kopię obecnych statystyk ze zaktualizowaną liczbą osiągnięć
+            val updatedStats = currentStats.copy(
+                totalAchievementsUnlocked = unlockedCount
+            )
+            // Zapisujemy nowe statystyki do bazy danych
+            repository.saveStats(updatedStats)
         }
     }
 
@@ -196,6 +213,66 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
                 repository.unlockPlanet(planetId, activeUser)
             }
         }
+    }
+
+    // --- UPGRADES ---
+
+    fun buyUpgrade(upgrade: Upgrade) {
+        viewModelScope.launch {
+            val username = currentUsername.value
+            
+            // 1. Fetch the absolute latest level and stats from the DB
+            val upgrades = repository.getAllUpgrades(username).first()
+            val stats = repository.getUserStats(username).first() ?: return@launch
+
+            val currentLevel = upgrades.find { it.id == upgrade.id }?.level ?: 0
+            val cost = (upgrade.baseCost * upgrade.costMultiplier.pow(currentLevel)).toLong()
+
+            android.util.Log.d("GameDebug", "Buying ${upgrade.name}. Current Level: $currentLevel, Cost: $cost, Cash: ${stats.currentCash}")
+
+            if (stats.currentCash >= cost) {
+                // 2. Save the new level immediately
+                repository.saveUpgrade(UpgradeEntity(username, upgrade.id, currentLevel + 1))
+
+                // 3. Trigger recalculation which will pull the new level from DB AND deduct cost
+                recalculateAndSaveStats(cost)
+            } else {
+                android.util.Log.d("GameDebug", "Insufficient funds for ${upgrade.name}")
+            }
+        }
+    }
+
+    private suspend fun recalculateAndSaveStats(costToDeduct: Long = 0) {
+        val username = currentUsername.value
+        // Fetch DIRECTLY from DB to avoid Flow delay
+        val currentUpgrades = repository.getAllUpgradesDirect(username)
+        val stats = repository.getUserStats(username).first() ?: return
+
+        var newClickPower = 1L
+        var newPassiveIncome = 0L
+
+        currentUpgrades.forEach { entity ->
+            val definition = UpgradeData.list.find { it.id == entity.id }
+            if (definition != null) {
+                when (definition.type) {
+                    UpgradeType.CLICK_POWER -> newClickPower += definition.effectValue * entity.level
+                    UpgradeType.PASSIVE_INCOME -> newPassiveIncome += definition.effectValue * entity.level
+                }
+            }
+        }
+
+        android.util.Log.d("GameDebug", "Recalculated for $username: Power=$newClickPower, Passive=$newPassiveIncome, Count=${currentUpgrades.size}, Levels=${currentUpgrades.joinToString { "${it.id}:${it.level}" }}")
+
+        val updatedStats = stats.copy(
+            currentCash = stats.currentCash - costToDeduct,
+            totalUpgradesBought = if (costToDeduct > 0) stats.totalUpgradesBought + 1 else stats.totalUpgradesBought,
+            clickPower = newClickPower,
+            passiveIncomePerSecond = newPassiveIncome
+        )
+        repository.saveStats(updatedStats)
+
+        // 4. Check achievements using the UPDATED stats
+        checkAndSaveAchievements(updatedStats)
     }
 }
 

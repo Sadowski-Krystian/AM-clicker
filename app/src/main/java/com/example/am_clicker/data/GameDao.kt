@@ -4,33 +4,41 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
 
     // --- USER STATS ---
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertOrUpdateUserStats(stats: UserStatsEntity)
+
+    @Query("DELETE FROM user_stats WHERE username = :username")
+    suspend fun deleteUser(username: String)
 
     // Zmiana: Szukamy po username, a nie po sztywnym id = 1
     @Query("SELECT * FROM user_stats WHERE username = :username")
     fun getUserStats(username: String): Flow<UserStatsEntity?>
 
     // --- UPGRADES ---
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun saveUpgrade(upgrade: UpgradeEntity)
 
     // Zmiana: Pobieramy ulepszenia tylko dla konkretnego gracza
     @Query("SELECT * FROM upgrades WHERE username = :username")
     fun getAllUpgrades(username: String): Flow<List<UpgradeEntity>>
 
+    // DODANO: Bezpośrednie pobieranie listy (nie-Flow) do obliczeń
+    @Query("SELECT * FROM upgrades WHERE username = :username")
+    suspend fun getAllUpgradesDirect(username: String): List<UpgradeEntity>
+
     // Zmiana: Szukamy ulepszenia po ID ORAZ po nazwie gracza (złożony klucz)
     @Query("SELECT * FROM upgrades WHERE id = :upgradeId AND username = :username")
     suspend fun getUpgradeById(upgradeId: String, username: String): UpgradeEntity?
 
     // --- ACHIEVEMENTS ---
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun saveAchievement(achievement: AchievementEntity)
 
     // Zmiana: Pobieramy osiągnięcia tylko dla konkretnego gracza
