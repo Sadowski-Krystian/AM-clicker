@@ -34,6 +34,9 @@ Aplikacja przechowuje stan gry lokalnie z wykorzystaniem biblioteki **Room**. Ba
 3. **`achievements`** - Rejestr postępów osiągnięć gracza.
 4. **`atlas_unlocked`** - Rejestr odblokowanych planet w atlasie
 
+
+![Schemat Bazy Danych (Room)](https://github.com/Sadowski-Krystian/AM-clicker/blob/chore/project-data/database_scheme.png)
+
 ## 🔄 Repozytorium
 Aplikacja kożysta z repozytorium w celu komunikacji między bazą danych `GameRepository`
 - Zwraca dane w formie strumieni `(Flow<T>)`, dzięki czemu każdy nowy zakup, zmiana gotówki czy odblokowana planeta automatycznie i natychmiastowo aktualizuje interfejs użytkownika.
@@ -49,8 +52,43 @@ Aplikacja posiada 2 główne ViewModele:
 2. `MainMenuViewModel`:
     - Odpowiada za logikę wyłącznie Menu Głównego. Zmienia kliknięca przycisków w jednorazowe zdarzenia.
 
+## 🔄 Przepływ danych
 
-![Schemat Bazy Danych (Room)](https://github.com/Sadowski-Krystian/AM-clicker/blob/chore/project-data/database_scheme.png)
+```mermaid
+flowchart TD
+    %% Sections 
+    subgraph UI[Warstwa UI - Jetpack compose]
+        GS(Wszystkie ekrany GameScreen etc.)
+    end
+
+    subgraph VM[GameViewModel - główna pętla]
+        GVM(Metody różnych akcji jak np. onAsteroidClicked)
+        Loop((Pętla gry w tle))
+        State(Stany Aplikacji jak uiState)
+    end
+
+    subgraph Repository[Warstwa danych - room database]
+        REPO(GameRepository)
+        DAO(GameDao)
+        DB[(SQLite Database)]
+    end
+
+    %% Actions from UI downwards
+    GS -- "1. Kliknięcia w ekran" --> GVM
+    Loop -- "1. Generowanie pasywnego dochodu" --> GVM
+
+    %% Saving
+    GVM -- "2. Wywołuje saveStats()" --> REPO
+    REPO -- "3. Zapytania do Game Dao" --> DAO
+    DAO -- "4. Wstawienia/Aktualizacje bazy danych" --> DB
+
+    %% Reactive return path
+    DB -- "5. Wykrywanie zmian" --> DAO
+    DAO -- "6. Powrót danych<UserStatsEntity>" --> REPO
+    REPO -- "7. Presyłanie danych do aplikacji" --> State
+    State -. "8. Obserwacja i edycja stanów" .-> GS
+```
+
 
 
 ---
