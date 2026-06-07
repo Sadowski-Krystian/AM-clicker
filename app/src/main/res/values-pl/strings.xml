@@ -73,4 +73,27 @@
     <string name="achiev_desc_millionaire">Zarób łącznie 1 000 000 gotówki</string>
     <string name="achiev_desc_getting_stronger">Kup swoje pierwsze ulepszenie</string>
     <string name="achiev_desc_master_optimizer">Kup łącznie 50 ulepszeń</string>
+
+
+    <!-- Ulepszenia: -->
+
+    <string name="upgrade_pickaxe_name">Rdzawy Kilof</string>
+    <string name="upgrade_pickaxe_desc">+1 kasy za kliknięcie</string>
+
+    <string name="upgrade_shovel_name">Żelazna Łopata</string>
+    <string name="upgrade_shovel_desc">+5 kasy za kliknięcie</string>
+
+    <string name="upgrade_drill_name">Wiertło Laserowe</string>
+    <string name="upgrade_drill_desc">+25 kasy za kliknięcie</string>
+
+    <string name="upgrade_bot_name">Bot Auto-Clicker</string>
+    <string name="upgrade_bot_desc">+1 kasy na sekundę</string>
+
+    <string name="upgrade_drone_name">Dron Górniczy</string>
+    <string name="upgrade_drone_desc">+10 kasy na sekundę</string>
+
+    <string name="upgrade_reactor_name">Reaktor Atomowy</string>
+    <string name="upgrade_reactor_desc">+50 kasy na sekundę</string>
+
+
 </resources>

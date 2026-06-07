@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -150,7 +151,7 @@ fun UpgradeCard(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = upgrade.name,
+                        text = stringResource(id = upgrade.nameResId),
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -165,7 +166,7 @@ fun UpgradeCard(
                 }
                 
                 Text(
-                    text = upgrade.description,
+                    text = stringResource(id = upgrade.descriptionResId),
                     color = Color.LightGray,
                     fontSize = 12.sp,
                     modifier = Modifier.padding(vertical = 4.dp)

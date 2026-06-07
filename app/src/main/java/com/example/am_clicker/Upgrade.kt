@@ -1,5 +1,6 @@
 package com.example.am_clicker
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -11,8 +12,8 @@ enum class UpgradeType {
 
 data class Upgrade(
     val id: String,
-    val name: String,
-    val description: String,
+    @StringRes val nameResId: Int,         // Zmieniono ze String na Int
+    @StringRes val descriptionResId: Int,  // Zmieniono ze String na Int
     val icon: ImageVector,
     val baseCost: Long,
     val costMultiplier: Double,
@@ -25,8 +26,8 @@ object UpgradeData {
         // Click Power Upgrades
         Upgrade(
             id = "click_1",
-            name = "Rusty Pickaxe",
-            description = "+1 cash per click",
+            nameResId = R.string.upgrade_pickaxe_name,
+            descriptionResId = R.string.upgrade_pickaxe_desc,
             icon = Icons.Default.Hardware,
             baseCost = 15L,
             costMultiplier = 1.15,
@@ -35,8 +36,8 @@ object UpgradeData {
         ),
         Upgrade(
             id = "click_2",
-            name = "Iron Shovel",
-            description = "+5 cash per click",
+            nameResId = R.string.upgrade_shovel_name,
+            descriptionResId = R.string.upgrade_shovel_desc,
             icon = Icons.Default.Construction,
             baseCost = 100L,
             costMultiplier = 1.2,
@@ -45,8 +46,8 @@ object UpgradeData {
         ),
         Upgrade(
             id = "click_3",
-            name = "Laser Drill",
-            description = "+25 cash per click",
+            nameResId = R.string.upgrade_drill_name,
+            descriptionResId = R.string.upgrade_drill_desc,
             icon = Icons.Default.BlurOn,
             baseCost = 500L,
             costMultiplier = 1.25,
@@ -56,8 +57,8 @@ object UpgradeData {
         // Passive Income Upgrades
         Upgrade(
             id = "passive_1",
-            name = "Auto-Clicker Bot",
-            description = "+1 cash per second",
+            nameResId = R.string.upgrade_bot_name,
+            descriptionResId = R.string.upgrade_bot_desc,
             icon = Icons.Default.SmartToy,
             baseCost = 50L,
             costMultiplier = 1.15,
@@ -66,8 +67,8 @@ object UpgradeData {
         ),
         Upgrade(
             id = "passive_2",
-            name = "Mining Drone",
-            description = "+10 cash per second",
+            nameResId = R.string.upgrade_drone_name,
+            descriptionResId = R.string.upgrade_drone_desc,
             icon = Icons.Default.Flight,
             baseCost = 300L,
             costMultiplier = 1.2,
@@ -76,8 +77,8 @@ object UpgradeData {
         ),
         Upgrade(
             id = "passive_3",
-            name = "Nuclear Reactor",
-            description = "+50 cash per second",
+            nameResId = R.string.upgrade_reactor_name,
+            descriptionResId = R.string.upgrade_reactor_desc,
             icon = Icons.Default.SettingsInputComponent,
             baseCost = 1500L,
             costMultiplier = 1.3,
