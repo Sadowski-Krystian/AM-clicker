@@ -44,8 +44,8 @@ fun AppNavigation() {
             GameScreen(
                 viewModel = gameViewModel,
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToAchievements = { navController.navigate("achievements_screen") }
-                // Możesz tu też dodać onNavigateToAtlas, jeśli wolisz sklep wewnątrz gry!
+                onNavigateToAchievements = { navController.navigate("achievements_screen") },
+                onNavigateToUpgrades = { navController.navigate("upgrades_screen") }
             )
         }
 
@@ -58,6 +58,13 @@ fun AppNavigation() {
 
         composable("achievements_screen") {
             AchievementsScreen(
+                viewModel = gameViewModel,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("upgrades_screen") {
+            UpgradesScreen(
                 viewModel = gameViewModel,
                 onNavigateBack = { navController.popBackStack() }
             )

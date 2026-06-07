@@ -12,9 +12,17 @@ class GameRepository(private val dao: GameDao) {
         dao.insertOrUpdateUserStats(stats)
     }
 
+    suspend fun deleteUser(username: String) {
+        dao.deleteUser(username)
+    }
+
     // Upgrades - Zmieniono z `val` na `fun`
     fun getAllUpgrades(username: String = "Player1"): Flow<List<UpgradeEntity>> {
         return dao.getAllUpgrades(username)
+    }
+
+    suspend fun getAllUpgradesDirect(username: String = "Player1"): List<UpgradeEntity> {
+        return dao.getAllUpgradesDirect(username)
     }
 
     suspend fun saveUpgrade(upgrade: UpgradeEntity) {

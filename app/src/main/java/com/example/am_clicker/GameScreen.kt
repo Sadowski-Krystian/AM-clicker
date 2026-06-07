@@ -42,7 +42,8 @@ import com.example.am_clicker.GameViewModelFactory
 fun GameScreen(
     viewModel: GameViewModel,
     onNavigateBack: () -> Unit,
-    onNavigateToAchievements: () -> Unit
+    onNavigateToAchievements: () -> Unit,
+    onNavigateToUpgrades: () -> Unit
 ) {
     // 1. EKRAN SAM TWORZY POŁĄCZENIE Z BAZĄ DANYCH
     val gameState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -92,7 +93,7 @@ fun GameScreen(
                         .size(36.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFF1DB954))
-                        .clickable { /* TODO */ },
+                        .clickable { onNavigateToUpgrades() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(Icons.Default.TrendingUp, contentDescription = "Stats", tint = Color.White, modifier = Modifier.size(20.dp))

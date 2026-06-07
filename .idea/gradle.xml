@@ -8,8 +8,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="/var/home/gulgulglut/Dokumenty/studia/sem6/AM/AM-clicker" />
-            <option value="/var/home/gulgulglut/Dokumenty/studia/sem6/AM/AM-clicker/app" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
       </GradleProjectSettings>
