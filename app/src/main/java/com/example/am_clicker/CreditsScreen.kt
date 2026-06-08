@@ -31,6 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
@@ -48,11 +49,16 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
         label = "logo_spin"
     )
 
-    // Zmienne do odtwarzacza wideo
+    // Zmienne do odtwarzacza wideo i audio
     var isFullscreen by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
     val videoUri = remember {
         Uri.parse("android.resource://${context.packageName}/${R.raw.mp4}")
+    }
+    // NOWOŚĆ: Ścieżka do pliku audio (upewnij się, że masz plik res/raw/audio)
+    val audioUri = remember {
+        Uri.parse("android.resource://${context.packageName}/${R.raw.mp3}")
     }
 
     Box(
@@ -72,7 +78,7 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 48.dp, bottom = 24.dp), // Added top padding for status bar area
+                    .padding(top = 48.dp, bottom = 24.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -91,7 +97,7 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.size(28.dp)) // To keep title perfectly centered
+                Spacer(modifier = Modifier.size(28.dp))
             }
 
             // --- HEADER ---
@@ -101,7 +107,7 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
                 tint = Color(0xFFD8B4E2),
                 modifier = Modifier
                     .size(80.dp)
-                    .rotate(angle) // Applies the spinning animation!
+                    .rotate(angle)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text("Asteroid Clicker", color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
@@ -196,6 +202,17 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
                 }
             }
 
+            // --- NOWOŚĆ: ODTWARZACZ AUDIO ---
+            Spacer(modifier = Modifier.height(32.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.MusicNote, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Ścieżka dźwiękowa", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            PromoAudioPlayer(audioUri = audioUri)
+
             // --- FOOTER ---
             Spacer(modifier = Modifier.height(48.dp))
             Text(stringResource(id = R.string.credits_made_with), color = Color(0xFF9C27B0), fontSize = 12.sp)
@@ -207,7 +224,7 @@ fun CreditsScreen(onNavigateBack: () -> Unit) {
         }
     }
 
-    // --- LOGIKA PEŁNEGO EKRANU (Dialog rysuje się na wierzchu wszystkiego) ---
+    // --- LOGIKA PEŁNEGO EKRANU ---
     if (isFullscreen) {
         Dialog(
             onDismissRequest = { isFullscreen = false },
@@ -242,8 +259,8 @@ fun CreditCard(title: String, icon: ImageVector, items: List<String>) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp)) // Subtle border
-            .background(Color(0xFF4A148C).copy(alpha = 0.4f)) // Semi-transparent card background
+            .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp))
+            .background(Color(0xFF4A148C).copy(alpha = 0.4f))
             .padding(20.dp)
     ) {
         Column {
@@ -304,4 +321,101 @@ fun PromoVideoPlayer(videoUri: Uri) {
         },
         modifier = Modifier.fillMaxSize()
     )
+}
+
+// --- NOWOŚĆ: KOMPONENT ODTWARZACZA AUDIO ---
+@Composable
+fun PromoAudioPlayer(audioUri: Uri) {
+    val context = LocalContext.current
+
+    // Inicjalizacja ExoPlayer dla audio
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context).build().apply {
+            setMediaItem(MediaItem.fromUri(audioUri))
+            prepare()
+            playWhenReady = false
+        }
+    }
+
+    var isPlaying by remember { mutableStateOf(false) }
+
+    // Słuchacz stanu odtwarzacza, aby Compose wiedział, kiedy muzyka gra
+    DisposableEffect(exoPlayer) {
+        val listener = object : Player.Listener {
+            override fun onIsPlayingChanged(playing: Boolean) {
+                isPlaying = playing
+            }
+        }
+        exoPlayer.addListener(listener)
+
+        onDispose {
+            exoPlayer.removeListener(listener)
+            exoPlayer.release()
+        }
+    }
+
+    // Wygląd odtwarzacza dopasowany do stylu Twoich kart
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp))
+            .background(Color(0xFF4A148C).copy(alpha = 0.4f))
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            // Ikonka nuty w fioletowym boksie
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFF8E24AA)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MusicNote,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Opis utworu
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Main Theme OST",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Naciśnij graj, aby posłuchać",
+                    color = Color(0xFFD8B4E2),
+                    fontSize = 13.sp
+                )
+            }
+
+            // Okrągły przycisk Play / Pause
+            IconButton(
+                onClick = {
+                    if (isPlaying) exoPlayer.pause() else exoPlayer.play()
+                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(Color(0xFF8E24AA), CircleShape)
+            ) {
+                Icon(
+                    imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = if (isPlaying) "Pauza" else "Graj",
+                    tint = Color.White,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+    }
 }
